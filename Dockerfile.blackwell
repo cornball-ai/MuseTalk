@@ -21,8 +21,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ffmpeg \
     python3.10 \
+    python3.10-dev \
     python3-pip \
     python3.10-venv \
+    build-essential \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libsm6 \
