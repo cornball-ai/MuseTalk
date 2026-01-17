@@ -10,8 +10,8 @@ mkdir -p models/musetalk models/musetalkV15 models/syncnet models/dwpose models/
 pip install -U "huggingface_hub[cli]"
 pip install gdown
 
-# Set HuggingFace mirror endpoint
-export HF_ENDPOINT=https://hf-mirror.com
+# Uncomment to use HuggingFace mirror (for users in China)
+# export HF_ENDPOINT=https://hf-mirror.com
 
 # Download MuseTalk V1.0 weights
 huggingface-cli download TMElyralab/MuseTalk \

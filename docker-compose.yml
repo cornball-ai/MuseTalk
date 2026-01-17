@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  musetalk:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: musetalk:latest
+    container_name: musetalk
+    ports:
+      - "7860:7860"
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      - ./input:/app/input
+      - ./output:/app/output
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # API server for programmatic access
+  musetalk-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: musetalk:latest
+    container_name: musetalk-api
+    ports:
+      - "7861:7861"
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      - ./input:/app/input
+      - ./output:/app/output
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: ["python", "api_server.py"]
+    restart: unless-stopped

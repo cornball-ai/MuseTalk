@@ -18,3 +18,9 @@ imageio[ffmpeg]
 omegaconf
 ffmpeg-python
 moviepy
+
+# API server dependencies
+fastapi
+uvicorn[standard]
+python-multipart
+pyyaml
