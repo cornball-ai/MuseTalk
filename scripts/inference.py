@@ -137,10 +137,10 @@ def main(args):
             # Extract audio features
             whisper_input_features, librosa_length = audio_processor.get_audio_feature(audio_path)
             whisper_chunks = audio_processor.get_whisper_chunk(
-                whisper_input_features, 
-                device, 
-                weight_dtype, 
-                whisper, 
+                whisper_input_features,
+                device,
+                weight_dtype,
+                whisper,
                 librosa_length,
                 fps=fps,
                 audio_padding_length_left=args.audio_padding_length_left,
@@ -161,8 +161,10 @@ def main(args):
             
             print(f"Number of frames: {len(frame_list)}")         
             
-            # Process each frame
+            # Process each frame - track valid frames and coords separately
             input_latent_list = []
+            valid_coord_list = []
+            valid_frame_list = []
             for bbox, frame in zip(coord_list, frame_list):
                 if bbox == coord_placeholder:
                     continue
@@ -174,10 +176,12 @@ def main(args):
                 crop_frame = cv2.resize(crop_frame, (256,256), interpolation=cv2.INTER_LANCZOS4)
                 latents = vae.get_latents_for_unet(crop_frame)
                 input_latent_list.append(latents)
-        
-            # Smooth first and last frames
-            frame_list_cycle = frame_list + frame_list[::-1]
-            coord_list_cycle = coord_list + coord_list[::-1]
+                valid_coord_list.append(bbox)
+                valid_frame_list.append(frame)
+
+            # Smooth first and last frames - use only valid frames/coords
+            frame_list_cycle = valid_frame_list + valid_frame_list[::-1]
+            coord_list_cycle = valid_coord_list + valid_coord_list[::-1]
             input_latent_list_cycle = input_latent_list + input_latent_list[::-1]
             
             # Batch inference
