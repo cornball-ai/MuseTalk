@@ -173,7 +173,7 @@ docker run --rm --gpus all \
 
 **Performance on RTX 5060 Ti (16GB VRAM):**
 - Resolution: 1024x1024
-- 5-second video: ~30 seconds
+- 5-second video: 27 seconds inference time
 
 **Note:** The `run_inference.py` wrapper is required for PyTorch 2.7+ compatibility with legacy model checkpoints.
 
