@@ -144,6 +144,39 @@ We also hope you note that we have not verified, maintained, or updated third-pa
 
 ### [ComfyUI](https://github.com/chaojie/ComfyUI-MuseTalk)
 
+### Docker (cornball-ai fork)
+
+We provide Docker support for easy deployment, including support for NVIDIA Blackwell GPUs (RTX 50xx series).
+
+**Standard build** (CUDA 11.7, PyTorch 2.0 - works with most GPUs):
+```bash
+docker build -t musetalk:latest .
+docker run --gpus all -p 7860:7860 musetalk:latest
+```
+
+**Blackwell build** (CUDA 12.8, PyTorch 2.7 - required for RTX 50xx):
+```bash
+docker build -f Dockerfile.blackwell -t musetalk:blackwell .
+docker run --gpus all -p 7860:7860 musetalk:blackwell
+```
+
+**Run inference with Docker:**
+```bash
+docker run --rm --gpus all \
+  -v $(pwd)/input:/app/input \
+  -v $(pwd)/output:/app/output \
+  musetalk:blackwell \
+  python run_inference.py \
+    --inference_config configs/inference/test.yaml \
+    --result_dir /app/output
+```
+
+**Performance on RTX 5060 Ti (16GB VRAM):**
+- Resolution: 1024x1024
+- 5-second video: ~30 seconds
+
+**Note:** The `run_inference.py` wrapper is required for PyTorch 2.7+ compatibility with legacy model checkpoints.
+
 ## Installation
 To prepare the Python environment and install additional packages such as opencv, diffusers, mmcv, etc., please follow the steps below:
 
